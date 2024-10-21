@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Proximity Sensor Detection</title>
+</head>
+<body>
+    <div id="detection-status"></div>
+
+    <script>
+        // Function to handle proximity sensor changes
+        function handleProximity(event) {
+            const proximity = event.target.value;
+
+            if (proximity === 0) {
+                document.getElementById("detection-status").textContent = "Object Detected";
+            } else {
+                document.getElementById("detection-status").textContent = "";
+            }
+        }
+
+        // Access the proximity sensor
+        navigator.permissions.query({ name: "proximity-sensor" }).then((result) => {
+            if (result.state === "granted") {
+                const proximitySensor = new ProximitySensor({ frequency: 60 }); // Adjust frequency as needed
+                proximitySensor.addEventListener("reading", handleProximity);
+                proximitySensor.start();
+            } else {
+                console.error("Proximity sensor permission denied.");
+            }
+        });
+    </script>
+</body>
+</html>
